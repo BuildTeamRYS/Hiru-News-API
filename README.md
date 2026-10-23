@@ -2,7 +2,7 @@
 
 A production-ready API for scraping and serving news from [hirunews.lk](https://hirunews.lk) - Sri Lanka's most visited news website. Deployed on **Cloudflare Workers** (`wrangler.toml` + `index.js`) with full-text extraction, images, and categorization.
 
-**Live API (Workers):** `https://hiru-news-api.your-account.workers.dev/api`
+**Live API (Workers):** `https://hiru-news-api.ravijaanthony.workers.dev/api`
 **Deploy:** `wrangler deploy`  |  **Local dev:** `wrangler dev`
 
 ---
@@ -39,16 +39,16 @@ A production-ready API for scraping and serving news from [hirunews.lk](https://
 
 ```bash
 # Check API status (replace with your Workers URL after deploy)
-curl https://hiru-news-api.your-account.workers.dev/api/health
+curl https://hiru-news-api.ravijaanthony.workers.dev/api/health
 
 # Get latest news (5 articles)
-curl "https://hiru-news-api.your-account.workers.dev/api/latest-news?limit=5"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/latest-news?limit=5"
 
 # Get specific article by ID
-curl https://hiru-news-api.your-account.workers.dev/api/article/440221
+curl https://hiru-news-api.ravijaanthony.workers.dev/api/article/440221
 
 # Get sports news
-curl "https://hiru-news-api.your-account.workers.dev/api/category/sports"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/category/sports"
 ```
 
 > **Note:** After `wrangler deploy`, your URL is shown in the Wrangler output (e.g., `https://your-project.your-subdomain.workers.dev`). Replace `your-account` in examples above.
@@ -57,12 +57,12 @@ curl "https://hiru-news-api.your-account.workers.dev/api/category/sports"
 
 ```javascript
 // Get breaking news (replace with your deployed Workers URL)
-fetch('https://hiru-news-api.your-account.workers.dev/api/breaking-news')
+fetch('https://hiru-news-api.ravijaanthony.workers.dev/api/breaking-news')
   .then(response => response.json())
   .then(data => console.log(data));
 
 // Get article with full text
-fetch('https://hiru-news-api.your-account.workers.dev/api/article/440235')
+fetch('https://hiru-news-api.ravijaanthony.workers.dev/api/article/440235')
   .then(response => response.json())
   .then(article => {
     console.log(article.data.headline);
@@ -155,6 +155,12 @@ fetch('https://hiru-news-api.your-account.workers.dev/api/article/440235')
 
 ## 🔧 Query Parameters
 
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | integer | `10` | Number of articles to return |
+| `details` | boolean | `true` | Get full article details (false for basic info) |
+| `lang` | string | `sin` | Language: `sin` (Sinhala), `en` (English), `tam` (Tamil) |
+
 ### Common Parameters
 
 | Parameter | Type | Default | Description |
@@ -175,31 +181,38 @@ fetch('https://hiru-news-api.your-account.workers.dev/api/article/440235')
 ### 1. Get Latest News (Basic)
 
 ```bash
-curl "https://hiru-news-api.your-account.workers.dev/api/latest-news?limit=3"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/latest-news?limit=3"
 ```
 
 ### 2. Get Article with Full Details
 
 ```bash
-curl "https://hiru-news-api.your-account.workers.dev/api/article/440235"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/article/440235"
 ```
 
 ### 3. Get Sports News (Fast Mode)
 
 ```bash
-curl "https://hiru-news-api.your-account.workers.dev/api/category/sports?limit=5&details=false"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/category/sports?limit=5&details=false"
 ```
 
 ### 4. Search for News
 
 ```bash
-curl "https://hiru-news-api.your-account.workers.dev/api/search?q=අනතුර&limit=5"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/search?q=අනතුර&limit=5"
 ```
 
 ### 5. Get News by Date
 
 ```bash
-curl "https://hiru-news-api.your-account.workers.dev/api/date?date=2026-01-12"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/date?date=2026-01-12"
+```
+
+### 6. English Language Version
+
+```bash
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/breaking-news?limit=3&lang=en"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/latest-news?limit=5&lang=tam"
 ```
 
 ---
@@ -313,7 +326,7 @@ Join for:
 
 ```bash
 # Add debug parameter
-curl "https://hiru-news-api.your-account.workers.dev/api/article/440221?debug=true"
+curl "https://hiru-news-api.ravijaanthony.workers.dev/api/article/440221?debug=true"
 ```
 
 ---
