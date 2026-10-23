@@ -1,8 +1,9 @@
 # 📰 Hiru News API
 
-A production-ready API for scraping and serving news from [hirunews.lk](https://hirunews.lk) - Sri Lanka's most visited news website. Deployed on Vercel with full-text extraction, images, and categorization.
+A production-ready API for scraping and serving news from [hirunews.lk](https://hirunews.lk) - Sri Lanka's most visited news website. Deployed on **Cloudflare Workers** (`wrangler.toml` + `index.js`) with full-text extraction, images, and categorization.
 
-**Live API:** `https://hirunews.vercel.app/api`
+**Live API (Workers):** `https://hiru-news-api.your-account.workers.dev/api`
+**Deploy:** `wrangler deploy`  |  **Local dev:** `wrangler dev`
 
 ---
 
@@ -24,7 +25,7 @@ A production-ready API for scraping and serving news from [hirunews.lk](https://
 - Health status check
 
 ### 🚀 Production Ready
-- Deployed on Vercel (Serverless Functions)
+- Deployed on **Cloudflare Workers** (`wrangler deploy` + `wrangler dev`)
 - CORS enabled for frontend integration
 - Error handling & graceful fallbacks
 - JSON responses with consistent formatting
@@ -34,32 +35,34 @@ A production-ready API for scraping and serving news from [hirunews.lk](https://
 
 ## 🚀 Quick Start
 
-### Test the API
+### Test the API (Cloudflare Workers)
 
 ```bash
-# Check API status
-curl https://hirunews.vercel.app/api/health
+# Check API status (replace with your Workers URL after deploy)
+curl https://hiru-news-api.your-account.workers.dev/api/health
 
 # Get latest news (5 articles)
-curl https://hirunews.vercel.app/api/latest-news?limit=5
+curl "https://hiru-news-api.your-account.workers.dev/api/latest-news?limit=5"
 
 # Get specific article by ID
-curl https://hirunews.vercel.app/api/article/440221
+curl https://hiru-news-api.your-account.workers.dev/api/article/440221
 
 # Get sports news
-curl https://hirunews.vercel.app/api/category/sports
+curl "https://hiru-news-api.your-account.workers.dev/api/category/sports"
 ```
+
+> **Note:** After `wrangler deploy`, your URL is shown in the Wrangler output (e.g., `https://your-project.your-subdomain.workers.dev`). Replace `your-account` in examples above.
 
 ### Frontend Integration (JavaScript)
 
 ```javascript
-// Get breaking news
-fetch('https://hirunews.vercel.app/api/breaking-news')
+// Get breaking news (replace with your deployed Workers URL)
+fetch('https://hiru-news-api.your-account.workers.dev/api/breaking-news')
   .then(response => response.json())
   .then(data => console.log(data));
 
 // Get article with full text
-fetch('https://hirunews.vercel.app/api/article/440235')
+fetch('https://hiru-news-api.your-account.workers.dev/api/article/440235')
   .then(response => response.json())
   .then(article => {
     console.log(article.data.headline);
@@ -172,69 +175,72 @@ fetch('https://hirunews.vercel.app/api/article/440235')
 ### 1. Get Latest News (Basic)
 
 ```bash
-curl "https://hirunews.vercel.app/api/latest-news?limit=3"
+curl "https://hiru-news-api.your-account.workers.dev/api/latest-news?limit=3"
 ```
 
 ### 2. Get Article with Full Details
 
 ```bash
-curl "https://hirunews.vercel.app/api/article/440235"
+curl "https://hiru-news-api.your-account.workers.dev/api/article/440235"
 ```
 
 ### 3. Get Sports News (Fast Mode)
 
 ```bash
-curl "https://hirunews.vercel.app/api/category/sports?limit=5&details=false"
+curl "https://hiru-news-api.your-account.workers.dev/api/category/sports?limit=5&details=false"
 ```
 
 ### 4. Search for News
 
 ```bash
-curl "https://hirunews.vercel.app/api/search?q=අනතුර&limit=5"
+curl "https://hiru-news-api.your-account.workers.dev/api/search?q=අනතුර&limit=5"
 ```
 
 ### 5. Get News by Date
 
 ```bash
-curl "https://hirunews.vercel.app/api/date?date=2026-01-12"
+curl "https://hiru-news-api.your-account.workers.dev/api/date?date=2026-01-12"
 ```
 
 ---
 
 ## 🛠️ Development
 
-### Local Setup
+### Local Setup (Cloudflare Workers)
 
 ```bash
 # Clone and install
-git clone <repository-url>
-cd hiru-news-api
 npm install
 
-# Run locally
-npx vercel dev
+# Run locally with Wrangler (uses wrangler.toml + index.js)
+npx wrangler dev
 
-# Test endpoints
-curl http://localhost:3000/api/health
-curl http://localhost:3000/api/latest-news
+# Or use the package script
+npm run dev
+
+# Test endpoints (replace with your local Wrangler URL)
+curl http://localhost:8787/api/health
+curl http://localhost:8787/api/latest-news
 ```
 
-### Project Structure
+### Project Structure (Workers)
 
 ```
 hiru-news-api/
-├── api/                    # Vercel Serverless Functions
-│   ├── article/[id].js    # Dynamic article routes
-│   ├── category/[name].js # Dynamic category routes
-│   ├── breaking-news.js   # Breaking news endpoint
-│   ├── latest-news.js     # Latest news endpoint
-│   ├── date.js           # Date-based filtering
-│   ├── search.js         # Search functionality
-│   └── health.js         # API status check
+├── api/                    # Vercel-style serverless functions (convert to Workers format for full routing)
+│   ├── article/[id].js
+│   ├── category/[name].js
+│   ├── breaking-news.js
+│   ├── latest-news.js
+│   ├── date.js
+│   ├── search.js
+│   └── health.js
 ├── lib/
-│   └── scraper.js        # Core scraping engine
-├── package.json          # Dependencies
-└── vercel.json          # Vercel configuration
+│   └── scraper.js         # Core scraping engine
+├── index.js               # Cloudflare Worker entry (addEventListener fetch handler)
+├── wrangler.toml          # Cloudflare Workers config (main, compatibility_date, nodejs_compat)
+├── public/                # Optional static assets (only if using Workers Sites / [site] bucket)
+└── package.json
 ```
 
 ---
@@ -245,19 +251,25 @@ hiru-news-api/
 2. Start with small limit values (3-5 articles)
 3. Cache responses on your frontend (60 seconds recommended)
 4. Use `breaking-news` for time-sensitive updates
-5. Handle timeouts gracefully (API has 15-second limit)
+5. Handle timeouts gracefully (Workers runtime + scraping latency; reduce `limit` if slow)
 
 ---
 
-## 🚨 Rate Limits & Limitations
+## 🚨 Rate Limits & Limitations (Cloudflare Workers)
 
-| Aspect | Limit/Note |
-|--------|------------|
-| **Max duration** | 15 seconds per request (Vercel limit) |
-| **Recommended** | Keep requests under 10 seconds |
-| **Concurrent requests** | Limited by Vercel free tier |
-| **Data freshness** | Scraped in real-time, no caching |
+| Aspect | Limit / Note |
+|--------|--------------|
+| **Platform** | Cloudflare Workers (`wrangler deploy`) — not Vercel |
+| **Requests (Free)** | ~100,000 requests/day (free tier); paid raises this |
+| **CPU time / request** | Subject to Workers execution-time limits (free tier stricter than paid) |
+| **Max duration** | Wall-clock timeout set by Cloudflare runtime (~30s paid; shorter for free) |
+| **Recommended** | Keep requests under 10 seconds; use `details=false` + small `limit` |
+| **Concurrent** | Handled globally by Cloudflare edge — no serverless-concurrency bottleneck |
+| **Data freshness** | Scraped in real-time via `lib/scraper.js`; no server-side cache by default |
+| **Static assets** | `public/` folder only active if `[site]` bucket enabled in `wrangler.toml` |
 | **Language** | Primarily Sinhala, some English content |
+
+> ⚠️ **Workers Note:** If scraping is slow or site HTML changes, the request may hit the Workers timeout. Use `/api/health` to check status and reduce `limit` to 3-5 articles for faster responses.
 
 ---
 
@@ -301,7 +313,54 @@ Join for:
 
 ```bash
 # Add debug parameter
-curl "https://hirunews.vercel.app/api/article/440221?debug=true"
+curl "https://hiru-news-api.your-account.workers.dev/api/article/440221?debug=true"
+```
+
+---
+
+## ☁️ Cloudflare Workers — Deploy & Test
+
+### Deploy
+
+```bash
+# Login (first time)
+npx wrangler login
+
+# Deploy to Cloudflare Workers
+npx wrangler deploy
+
+# Or via package script
+npm run deploy
+```
+
+After deploy, Wrangler prints your Workers URL (e.g., `https://hiru-news-api.<subdomain>.workers.dev`). Use that in your frontend or curl commands.
+
+### Test Locally (before deploy)
+
+```bash
+# Local Workers server (uses wrangler.toml)
+npx wrangler dev
+# Default: http://localhost:8787
+
+# Health check locally
+curl http://localhost:8787/api/health
+
+# Breaking news locally
+curl "http://localhost:8787/api/breaking-news?limit=5"
+```
+
+### Testing from the Browser / Frontend
+
+```javascript
+// Vanilla fetch — works in any browser (CORS enabled)
+fetch('https://YOUR-WORKERS-URL/api/latest-news?limit=3')
+  .then(r => r.json())
+  .then(data => console.log(data));
+
+// With async/await
+const res = await fetch('https://YOUR-WORKERS-URL/api/article/440221');
+const article = await res.json();
+console.log(article.data.headline, article.data.fullText);
 ```
 
 ---
@@ -312,11 +371,13 @@ curl "https://hirunews.vercel.app/api/article/440221?debug=true"
 
 - ✅ Complete article scraping (text, images, metadata)
 - ✅ Multiple API endpoints
-- ✅ Vercel deployment
+- ✅ Vercel deployment (legacy) → **Cloudflare Workers** (`wrangler.toml`)
 - ✅ CORS support
 - ✅ Error handling
 - ✅ Category-based filtering
 - ✅ Search functionality
+- ✅ Cloudflare Workers deployment (`wrangler.toml`, `index.js`, `wrangler deploy`)
+- ✅ CORS + `nodejs_compat` support
 
 ---
 
