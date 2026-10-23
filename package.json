@@ -4,9 +4,11 @@
   "description": "Hiru News Scraping API",
   "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
-    "start": "node test.js",
-    "deploy": "vercel --prod"
+    "dev": "wrangler dev",
+    "start": "node index.js",
+    "build": "echo 'Cloudflare Workers — deploy with: npx wrangler deploy'",
+    "deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev --local"
   },
   "dependencies": {
     "axios": "^1.6.0",
