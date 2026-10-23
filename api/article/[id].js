@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
             });
         }
         
-        const scraper = new HiruNewsScraper();
+        const scraper = new HiruNewsScraper(req.query.lang || 'sin');
         const article = await scraper.getArticleById(id);
         
         res.json({

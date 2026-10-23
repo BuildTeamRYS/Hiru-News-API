@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
         }
         
         // For now, we'll filter from latest news by date text
-        const scraper = new HiruNewsScraper();
+        const scraper = new HiruNewsScraper(req.query.lang || 'sin');
         const allNews = await scraper.getLatestNews(30); // Get more to filter
         
         // Filter articles that mention the date

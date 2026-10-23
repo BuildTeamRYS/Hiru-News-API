@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     
     try {
         const { limit = 5 } = req.query;
-        const scraper = new HiruNewsScraper();
+        const scraper = new HiruNewsScraper(req.query.lang || 'sin');
         
         const breakingNews = await scraper.getBreakingNews(parseInt(limit));
         

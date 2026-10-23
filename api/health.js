@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
     
     try {
         // Quick test to see if scraper works
-        const scraper = new HiruNewsScraper();
+        const scraper = new HiruNewsScraper(req.query.lang || 'sin');
         const testNews = await scraper.getLatestNews(1);
         
         res.json({

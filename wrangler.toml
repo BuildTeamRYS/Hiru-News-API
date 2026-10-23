@@ -1,0 +1,9 @@
+name = "hiru-news-api"
+main = "index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Pure Worker — no static site / Pages bucket required
+# If using Workers Sites (static assets + worker), uncomment below:
+# [site]
+# bucket = "./public"

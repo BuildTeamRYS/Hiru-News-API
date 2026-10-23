@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
             });
         }
         
-        const scraper = new HiruNewsScraper();
+        const scraper = new HiruNewsScraper(req.query.lang || 'sin');
         const allNews = await scraper.getLatestNews(50); // Get more to search through
         
         // Simple search in headlines and summaries
